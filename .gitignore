@@ -1,0 +1,60 @@
+# Python 相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+ENV/
+env/
+.env
+.venv
+
+# 日志文件
+*.log
+logs/
+
+# 数据库文件
+*.db
+*.sqlite3
+
+# IDE相关文件
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# 项目特定文件夹
+uploads/
+outputs/
+browser_use/
+mock_browser_use/
+
+# 本地配置文件
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# 其他
+.coverage
+htmlcov/
+.pytest_cache/ 
