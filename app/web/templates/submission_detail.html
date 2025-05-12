@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <div class="mb-6">
+        <a href="/submissions" class="text-blue-600 hover:text-blue-800">← 返回提交列表</a>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div class="flex justify-between items-start">
+            <h1 class="text-2xl font-bold">{{ submission.product_name }}</h1>
+            
+            <div>
+                {% if submission.status == "completed" %}
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    已完成
+                </span>
+                {% elif submission.status == "running" %}
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    进行中
+                </span>
+                <div class="mt-2 flex">
+                    <a href="/submission/{{ submission.id }}/logs" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-full transition">
+                        查看实时日志
+                    </a>
+                </div>
+                {% elif submission.status == "pending" %}
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    待处理
+                </span>
+                <form action="/start-submission/{{ submission.id }}" method="post" class="mt-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-full transition">
+                        开始提交
+                    </button>
+                </form>
+                {% else %}
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
+                    待重试
+                </span>
+                <form action="/start-submission/{{ submission.id }}" method="post" class="mt-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-full transition">
+                        重新提交
+                    </button>
+                </form>
+                <div class="mt-2 flex">
+                    <a href="/submission/{{ submission.id }}/logs" class="bg-gray-600 hover:bg-gray-700 text-white text-xs px-3 py-1 rounded-full transition">
+                        查看错误日志
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <h2 class="text-sm font-medium text-gray-500">产品网址</h2>
+                <p class="mt-1"><a href="{{ submission.product_url }}" target="_blank" class="text-blue-600 hover:underline">{{ submission.product_url }}</a></p>
+            </div>
+            
+            <div>
+                <h2 class="text-sm font-medium text-gray-500">创建时间</h2>
+                <p class="mt-1">{{ submission.created_at.split("T")[0] if submission.created_at else "-" }}</p>
+            </div>
+            
+            <div>
+                <h2 class="text-sm font-medium text-gray-500">联系邮箱</h2>
+                <p class="mt-1">{{ submission.email }}</p>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-sm font-medium text-gray-500">产品描述</h2>
+            <p class="mt-1">{{ submission.product_description }}</p>
+        </div>
+        
+        {% if submission.product_category %}
+        <div>
+            <h2 class="text-sm font-medium text-gray-500">产品类别</h2>
+            <p class="mt-1">{{ submission.product_category }}</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <h2 class="text-xl font-semibold mb-4">提交结果</h2>
+    
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">目标网站</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">提交时间</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">备注</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for result in submission.results %}
+                <tr>
+                    <td class="px-6 py-4">
+                        <a href="{{ result.directory_url }}" target="_blank" class="text-blue-600 hover:underline">{{ result.directory_url }}</a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if result.is_success == true %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            成功
+                        </span>
+                        {% elif result.is_success == false %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            失败
+                        </span>
+                        {% else %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            待提交
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ result.submitted_at.split("T")[0] if result.submitted_at else "-" }}</td>
+                    <td class="px-6 py-4">
+                        {% if not result.is_success and result.short_reason_if_failed %}
+                        {{ result.short_reason_if_failed }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

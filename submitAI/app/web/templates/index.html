@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 6rem 0;
+    }
+    .feature-card {
+        transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .benefit-icon {
+        background: rgba(79, 70, 229, 0.1);
+        border-radius: 50%;
+        padding: 1rem;
+        display: inline-flex;
+        margin-bottom: 1rem;
+    }
+    .stats-box {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    .stats-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .testimonial-card {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 英雄部分 -->
+<div class="hero-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center">
+            <div class="lg:w-1/2 lg:pr-8 mb-8 lg:mb-0">
+                <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+                    提交您的工具
+                </h1>
+                <p class="text-xl text-indigo-100 mb-8">
+                    最简单的方式提交您的工具到顶级AI目录。<br>
+                    立即在AI社区中提升您的知名度！
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="/register" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 shadow-lg">
+                        立即开始
+                    </a>
+                    <a href="/new-submission" class="inline-flex items-center justify-center px-8 py-3 border border-white text-base font-medium rounded-md text-white hover:bg-indigo-700">
+                        免费提交
+                    </a>
+                </div>
+            </div>
+            <div class="lg:w-1/2">
+                <img src="https://images.unsplash.com/photo-1551721434-8b94ddff0e6d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" alt="AI工具展示" class="rounded-lg shadow-2xl">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 核心功能部分 -->
+<div class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                核心优势
+            </h2>
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                选择我们服务的关键原因和它提供的优势。
+            </p>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div class="bg-white rounded-lg shadow-lg p-8 feature-card">
+                <div class="benefit-icon text-indigo-600">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">效率</h3>
+                <p class="mt-4 text-base text-gray-500">
+                    通过简化流程节省时间，只需点击几下，即可将您的工具提交到多个目录。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-8 feature-card">
+                <div class="benefit-icon text-indigo-600">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">免费功能</h3>
+                <p class="mt-4 text-base text-gray-500">
+                    基础功能完全免费使用，让任何规模的开发者都能使用我们的服务推广他们的产品。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-8 feature-card">
+                <div class="benefit-icon text-indigo-600">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">广泛可访问性</h3>
+                <p class="mt-4 text-base text-gray-500">
+                    我们的工具可帮助您将产品提交到超过50个AI目录，覆盖更广泛的受众群体。
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 关键指标部分 -->
+<div class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                通过自动化产品提交工具释放潜力
+            </h2>
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                强调使用我们的工具进行AI工具目录提交的好处的统计数据。
+            </p>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div class="stats-box">
+                <div class="text-5xl font-extrabold text-indigo-600 mb-2">50+</div>
+                <div class="text-lg text-gray-600">AI目录覆盖</div>
+            </div>
+            <div class="stats-box">
+                <div class="text-5xl font-extrabold text-indigo-600 mb-2">100K</div>
+                <div class="text-lg text-gray-600">用户覆盖</div>
+            </div>
+            <div class="stats-box">
+                <div class="text-5xl font-extrabold text-indigo-600 mb-2">95%</div>
+                <div class="text-lg text-gray-600">品牌知名度提升</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 用户评价部分 -->
+<div class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                用户们怎么说
+            </h2>
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                了解其他人对我们产品的评价和它带来的影响。
+            </p>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div class="testimonial-card">
+                <div class="flex items-center mb-4">
+                    <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl mr-4">A</div>
+                    <div>
+                        <h4 class="text-lg font-semibold">安娜</h4>
+                        <p class="text-gray-600">技术专家</p>
+                    </div>
+                </div>
+                <p class="text-gray-600">"使用'自动化产品提交工具'已经改变了我们推广AI解决方案的方式。简化的提交流程为我们节省了宝贵的时间，并显著提高了我们的知名度。"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="flex items-center mb-4">
+                    <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl mr-4">B</div>
+                    <div>
+                        <h4 class="text-lg font-semibold">布莱恩</h4>
+                        <p class="text-gray-600">AI开发者</p>
+                    </div>
+                </div>
+                <p class="text-gray-600">"这个平台对于将我们的工具列在利基AI目录中非常棒。这对于接触正确的受众至关重要。"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="flex items-center mb-4">
+                    <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl mr-4">C</div>
+                    <div>
+                        <h4 class="text-lg font-semibold">克拉拉</h4>
+                        <p class="text-gray-600">SEO分析师</p>
+                    </div>
+                </div>
+                <p class="text-gray-600">"通过自动化产品提交工具，我们观察到由于顶级AI目录中的优质反向链接，我们的搜索引擎排名有了显著改善。"</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 行动号召部分 -->
+<div class="py-16 bg-indigo-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            立即提交您的AI工具
+        </h2>
+        <p class="mt-4 max-w-2xl text-xl text-indigo-100 mx-auto">
+            采取行动，通过加入我们的目录平台来增强您的工具的存在感。
+        </p>
+        <div class="mt-8">
+            <a href="/register" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 shadow-lg">
+                立即在线试用
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

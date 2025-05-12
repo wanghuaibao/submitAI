@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="py-6">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold leading-tight text-gray-900 mb-8">
+            创建新提交
+        </h1>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <form action="/api/submissions/create" method="post" enctype="multipart/form-data" id="submissionForm" class="space-y-8">
+                    <!-- 产品信息部分 -->
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            产品信息
+                        </h3>
+                        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="product_name" class="block text-sm font-medium text-gray-700">
+                                    产品名称 <span class="text-red-500">*</span>
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" name="product_name" id="product_name" required
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="product_url" class="block text-sm font-medium text-gray-700">
+                                    产品网址 <span class="text-red-500">*</span>
+                                </label>
+                                <div class="mt-1">
+                                    <input type="url" name="product_url" id="product_url" required
+                                        placeholder="https://example.com"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="product_description" class="block text-sm font-medium text-gray-700">
+                                    产品描述 <span class="text-red-500">*</span>
+                                </label>
+                                <div class="mt-1">
+                                    <textarea id="product_description" name="product_description" rows="4" required
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    详细描述您的产品功能、特点和优势。
+                                </p>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="product_category" class="block text-sm font-medium text-gray-700">
+                                    产品分类
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" name="product_category" id="product_category"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="screenshot" class="block text-sm font-medium text-gray-700">
+                                    产品截图
+                                </label>
+                                <div class="mt-1">
+                                    <input type="file" name="screenshot" id="screenshot"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 目标目录部分 -->
+                    <div class="pt-8">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            目标目录
+                        </h3>
+                        <div class="mt-6">
+                            <div class="mb-4">
+                                <textarea name="target_directories" id="target_directories" rows="4" required
+                                    placeholder="每行一个URL，例如：&#10;https://example.com/submit&#10;https://another-directory.com/submit-tool"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    输入您想要提交的目录网站URL，每行一个。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 验证信息部分 -->
+                    <div class="pt-8">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            验证信息
+                        </h3>
+                        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="email" class="block text-sm font-medium text-gray-700">
+                                    电子邮箱 <span class="text-red-500">*</span>
+                                </label>
+                                <div class="mt-1">
+                                    <input type="email" name="email" id="email" required
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    用于验证和注册的电子邮箱
+                                </p>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="email_password" class="block text-sm font-medium text-gray-700">
+                                    邮箱密码
+                                </label>
+                                <div class="mt-1">
+                                    <input type="password" name="email_password" id="email_password"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    用于自动处理验证邮件（可选）
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API配置部分 -->
+                    <div class="pt-8">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            API配置
+                        </h3>
+                        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="openai_api_key" class="block text-sm font-medium text-gray-700">
+                                    OpenAI API密钥
+                                </label>
+                                <div class="mt-1">
+                                    <input type="password" name="openai_api_key" id="openai_api_key"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="claude_api_key" class="block text-sm font-medium text-gray-700">
+                                    Claude API密钥
+                                </label>
+                                <div class="mt-1">
+                                    <input type="password" name="claude_api_key" id="claude_api_key"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">
+                            如果不提供API密钥，将使用系统默认密钥（可能会有使用限制）。
+                        </p>
+                    </div>
+
+                    <div class="pt-5">
+                        <div class="flex justify-end">
+                            <button type="button"
+                                class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                取消
+                            </button>
+                            <button type="submit"
+                                class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                开始提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('submissionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // 处理目标目录，将文本框中的多行转换为数组
+        const directoriesTextarea = document.getElementById('target_directories');
+        const directoriesText = directoriesTextarea.value;
+        const directoriesArray = directoriesText.split('\n').filter(line => line.trim() !== '');
+        
+        // 创建FormData对象
+        const formData = new FormData(this);
+        
+        // 删除原有的target_directories字段
+        formData.delete('target_directories');
+        
+        // 为每个目录添加一个target_directories字段
+        directoriesArray.forEach(url => {
+            formData.append('target_directories', url.trim());
+        });
+        
+        // 发送请求
+        fetch('/api/submissions/create', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('提交失败');
+        })
+        .then(data => {
+            // 提交成功，跳转到任务详情页
+            window.location.href = `/dashboard?task=${data.id}`;
+        })
+        .catch(error => {
+            alert('提交失败: ' + error.message);
+        });
+    });
+</script>
+{% endblock %} 

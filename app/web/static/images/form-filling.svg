@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" width="400" height="220">
+  <rect width="400" height="220" fill="#f0f4f8"/>
+  <g transform="translate(100, 40)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+    <line x1="20" y1="30" x2="180" y2="30" stroke="#4f46e5" stroke-width="2"/>
+    <line x1="20" y1="60" x2="180" y2="60" stroke="#4f46e5" stroke-width="2"/>
+    <line x1="20" y1="90" x2="180" y2="90" stroke="#4f46e5" stroke-width="2"/>
+    <rect x="20" y="110" width="60" height="20" rx="5" fill="#4f46e5"/>
+  </g>
+  <text x="200" y="200" text-anchor="middle" font-family="Arial" font-size="16" fill="#4f46e5">填写产品信息</text>
+</svg> 

@@ -1,0 +1,77 @@
+{
+  "id": "46f84eb4-cbb6-47ef-b061-161dcc1b4572",
+  "product_name": "百度",
+  "product_url": "https://www.baidu.com",
+  "short_description": "百度",
+  "product_description": "11",
+  "product_category": "text",
+  "pricing_model": "free",
+  "product_tags": [
+    "百度"
+  ],
+  "target_directories": [
+    "https://aitools.neilpatel.com/submit/",
+    "https://aitoolslist.io/submit-ai-tool/",
+    "https://free-ai-tools-directory.com/submit-request/",
+    "https://gpt3demo.com/partner/request",
+    "https://www.insidr.ai/submit-tools/",
+    "https://www.humanornot.co/submit-tool",
+    "https://www.rundown.ai/submit"
+  ],
+  "email": "kutooy@mailto.plus",
+  "logo_path": "uploads/logos/b8213649-b8f1-46df-a712-ebd73c6d9607.jpg",
+  "screenshot_path": "uploads/screenshots/0d5bd9aa-5a62-423d-8a55-97cd7eb8f554.png",
+  "created_at": "2025-05-11T16:45:01.823769",
+  "status": "running",
+  "results": [
+    {
+      "directory_url": "https://aitools.neilpatel.com/submit/",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://aitoolslist.io/submit-ai-tool/",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://free-ai-tools-directory.com/submit-request/",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://gpt3demo.com/partner/request",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://www.insidr.ai/submit-tools/",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://www.humanornot.co/submit-tool",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://www.rundown.ai/submit",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    }
+  ]
+}

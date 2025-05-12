@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold leading-tight text-gray-900 mb-6">
+            控制面板
+        </h1>
+
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-700">
+                    我的提交任务
+                </h2>
+            </div>
+            <div>
+                <a href="/new-submission" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                    <i class="fas fa-plus mr-2"></i> 新建提交
+                </a>
+            </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul class="divide-y divide-gray-200" id="tasksList">
+                <li class="px-6 py-4 flex items-center justify-center text-gray-500">
+                    正在加载任务...
+                </li>
+            </ul>
+        </div>
+
+        <!-- 任务详情部分 -->
+        <div id="taskDetail" class="mt-8 hidden">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4" id="taskDetailTitle">
+                任务详情
+            </h2>
+
+            <!-- 基本信息和状态 -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-md mb-6">
+                <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        任务概览
+                    </h3>
+                </div>
+                <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                    <dl class="sm:divide-y sm:divide-gray-200">
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                任务ID
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="detail-task-id">
+                                -
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                状态
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="detail-task-status">
+                                -
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                产品名称
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="detail-product-name">
+                                -
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                产品网址
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <a href="#" id="detail-product-url" class="text-indigo-600 hover:text-indigo-900" target="_blank">-</a>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                进度
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="detail-progress">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-indigo-600 h-2.5 rounded-full" id="progress-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="mt-2" id="progress-text">0/0 完成</div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                创建时间
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="detail-created-at">
+                                -
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- 提交结果列表 -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        提交结果
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    目录网站
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    状态
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    提交时间
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    备注
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="results-table-body">
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                                    暂无提交结果
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // 任务数据获取与展示
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取任务列表
+        const token = localStorage.getItem('access_token');
+        
+        if (!token) {
+            document.getElementById('tasksList').innerHTML = `
+                <li class="px-6 py-4 flex items-center justify-center text-gray-500">
+                    您需要<a href="/login" class="text-indigo-600 hover:text-indigo-900">登录</a>才能查看任务
+                </li>
+            `;
+            return;
+        }
+        
+        // 模拟加载任务数据
+        setTimeout(() => {
+            const mockTasks = [
+                {
+                    id: 'task1',
+                    status: 'completed',
+                    created_at: '2023-09-15T14:30:00Z',
+                    request: {
+                        product_name: 'AI画图工具',
+                        product_url: 'https://example.com/ai-tool',
+                        description: '一款强大的AI绘图工具',
+                        target_directories: ['aitools.directory', 'futuretools.io', 'there.ai']
+                    },
+                    results: [
+                        { directory: 'aitools.directory', is_success: true, message: '提交成功', timestamp: '2023-09-15T14:35:00Z' },
+                        { directory: 'futuretools.io', is_success: true, message: '提交成功', timestamp: '2023-09-15T14:36:00Z' },
+                        { directory: 'there.ai', is_success: false, message: '提交失败：格式不符合要求', timestamp: '2023-09-15T14:37:00Z' }
+                    ]
+                },
+                {
+                    id: 'task2',
+                    status: 'running',
+                    created_at: '2023-09-16T10:15:00Z',
+                    request: {
+                        product_name: 'AI文本生成器',
+                        product_url: 'https://example.com/text-gen',
+                        description: '智能文本生成工具',
+                        target_directories: ['aitools.directory', 'futuretools.io', 'there.ai', 'topai.tools']
+                    },
+                    results: [
+                        { directory: 'aitools.directory', is_success: true, message: '提交成功', timestamp: '2023-09-16T10:20:00Z' },
+                        { directory: 'futuretools.io', is_success: true, message: '提交成功', timestamp: '2023-09-16T10:22:00Z' }
+                    ]
+                }
+            ];
+            
+            renderTasksList(mockTasks);
+            
+            // 如果URL中有任务ID参数，显示该任务详情
+            const urlParams = new URLSearchParams(window.location.search);
+            const taskId = urlParams.get('id');
+            
+            if (taskId) {
+                const task = mockTasks.find(t => t.id === taskId);
+                if (task) {
+                    showTaskDetail(task);
+                }
+            }
+        }, 500);
+    });
+    
+    // 渲染任务列表
+    function renderTasksList(tasks) {
+        const tasksList = document.getElementById('tasksList');
+        
+        if (tasks.length === 0) {
+            tasksList.innerHTML = `
+                <li class="px-6 py-4 flex items-center justify-center text-gray-500">
+                    暂无任务，<a href="/new-submission" class="text-indigo-600 hover:text-indigo-900">创建一个新的提交</a>
+                </li>
+            `;
+            return;
+        }
+        
+        let html = '';
+        tasks.forEach(task => {
+            let statusBadge = '';
+            switch(task.status) {
+                case 'pending':
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">等待中</span>';
+                    break;
+                case 'running':
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">运行中</span>';
+                    break;
+                case 'completed':
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已完成</span>';
+                    break;
+                case 'failed':
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">失败</span>';
+                    break;
+            }
+            
+            const createdAt = new Date(task.created_at).toLocaleString();
+            const productName = task.request.product_name;
+            const successCount = task.results.filter(r => r.is_success).length;
+            const totalDirectories = task.request.target_directories.length;
+            
+            html += `
+                <li>
+                    <a href="javascript:void(0)" class="block hover:bg-gray-50" onclick="showTaskDetail(${JSON.stringify(task)})">
+                        <div class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <p class="text-sm font-medium text-indigo-600 truncate">
+                                        ${productName}
+                                    </p>
+                                    <p class="ml-2">
+                                        ${statusBadge}
+                                    </p>
+                                </div>
+                                <div class="ml-2 flex-shrink-0 flex">
+                                    <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        ${successCount}/${totalDirectories} 成功
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-2 sm:flex sm:justify-between">
+                                <div class="sm:flex">
+                                    <p class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-calendar-alt flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"></i>
+                                        ${createdAt}
+                                    </p>
+                                </div>
+                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                    <i class="fas fa-arrow-right flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"></i>
+                                    <p>
+                                        查看详情
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            `;
+        });
+        
+        tasksList.innerHTML = html;
+    }
+    
+    // 显示任务详情
+    function showTaskDetail(task) {
+        // 显示详情区域
+        document.getElementById('taskDetail').classList.remove('hidden');
+        
+        // 填充基本信息
+        document.getElementById('detail-task-id').textContent = task.id;
+        
+        let statusText = '';
+        switch(task.status) {
+            case 'pending': statusText = '等待中'; break;
+            case 'running': statusText = '运行中'; break;
+            case 'completed': statusText = '已完成'; break;
+            case 'failed': statusText = '失败'; break;
+        }
+        document.getElementById('detail-task-status').textContent = statusText;
+        
+        document.getElementById('detail-product-name').textContent = task.request.product_name;
+        
+        const productUrlElement = document.getElementById('detail-product-url');
+        productUrlElement.textContent = task.request.product_url;
+        productUrlElement.href = task.request.product_url;
+        
+        const successCount = task.results.filter(r => r.is_success).length;
+        const totalDirectories = task.request.target_directories.length;
+        const progressPercent = Math.round((successCount / totalDirectories) * 100);
+        
+        document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+        document.getElementById('progress-text').textContent = `${successCount}/${totalDirectories} 完成`;
+        
+        document.getElementById('detail-created-at').textContent = new Date(task.created_at).toLocaleString();
+        
+        // 填充结果表格
+        const resultsTableBody = document.getElementById('results-table-body');
+        if (task.results.length === 0) {
+            resultsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                        暂无提交结果
+                    </td>
+                </tr>
+            `;
+        } else {
+            let html = '';
+            task.results.forEach(result => {
+                const statusBadge = result.is_success 
+                    ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">成功</span>' 
+                    : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">失败</span>';
+                
+                const timestamp = new Date(result.timestamp).toLocaleString();
+                
+                html += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${result.directory}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            ${statusBadge}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${timestamp}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-normal">
+                            <div class="text-sm text-gray-900">${result.message}</div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            resultsTableBody.innerHTML = html;
+        }
+    }
+</script>
+{% endblock %} 

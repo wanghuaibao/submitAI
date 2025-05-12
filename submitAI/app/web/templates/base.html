@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="自动化产品提交工具 - 轻松提交您的AI工具到各大目录网站">
+    <meta name="keywords" content="AI工具, 产品提交, 目录, 自动化">
+    <title>{{ title }} - 自动化产品提交工具</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 添加图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <!-- 网站图标 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%234f46e5' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495' /%3E%3C/svg%3E">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="/" class="flex items-center text-xl font-bold text-indigo-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+                            </svg>
+                            自动化产品提交工具
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="/" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            首页
+                        </a>
+                        <a href="/dashboard" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            控制面板
+                        </a>
+                        <a href="/new-submission" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            创建提交
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <div class="ml-3 relative" id="desktop-auth-container">
+                        <div>
+                            <a href="/login" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">登录</a>
+                            <a href="/register" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium">注册</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 移动端菜单按钮 -->
+                <div class="flex items-center sm:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-expanded="false">
+                        <span class="sr-only">打开主菜单</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端菜单，默认隐藏 -->
+        <div class="sm:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">首页</a>
+                <a href="/dashboard" class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">控制面板</a>
+                <a href="/new-submission" class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">创建提交</a>
+                <div class="border-t border-gray-200 mt-4 pt-4" id="mobile-auth-container">
+                    <a href="/login" class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">登录</a>
+                    <a href="/register" class="bg-indigo-600 text-white block px-3 py-2 rounded-md text-base font-medium mt-1">注册</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="flex-grow">
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
+            <nav class="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
+                <div class="px-5 py-2">
+                    <a href="/" class="text-base text-gray-500 hover:text-gray-900">首页</a>
+                </div>
+                <div class="px-5 py-2">
+                    <a href="/dashboard" class="text-base text-gray-500 hover:text-gray-900">控制面板</a>
+                </div>
+                <div class="px-5 py-2">
+                    <a href="/new-submission" class="text-base text-gray-500 hover:text-gray-900">创建提交</a>
+                </div>
+                <div class="px-5 py-2">
+                    <a href="#" class="text-base text-gray-500 hover:text-gray-900">关于我们</a>
+                </div>
+                <div class="px-5 py-2">
+                    <a href="#" class="text-base text-gray-500 hover:text-gray-900">隐私政策</a>
+                </div>
+                <div class="px-5 py-2">
+                    <a href="#" class="text-base text-gray-500 hover:text-gray-900">服务条款</a>
+                </div>
+            </nav>
+            <div class="mt-8 flex justify-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">微信</span>
+                    <i class="fab fa-weixin text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">GitHub</span>
+                    <i class="fab fa-github text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">Twitter</span>
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+            </div>
+            <p class="mt-8 text-center text-base text-gray-500">
+                &copy; 2025 自动化产品提交工具. 保留所有权利.
+            </p>
+        </div>
+    </footer>
+
+    <!-- 通用JS脚本 -->
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+            
+            // 切换汉堡图标和关闭图标
+            const hamburgerIcon = this.querySelector('.block');
+            const closeIcon = this.querySelector('.hidden');
+            hamburgerIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+        
+        // 高亮当前页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            const path = window.location.pathname;
+            const navLinks = document.querySelectorAll('nav a');
+            
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === path || (path.startsWith(href) && href !== '/')) {
+                    // 移除默认类
+                    link.classList.remove('text-gray-500', 'border-transparent');
+                    
+                    // 桌面导航高亮
+                    if (link.parentElement.classList.contains('sm:flex')) {
+                        link.classList.add('text-indigo-600', 'border-indigo-500');
+                    } 
+                    // 移动导航高亮
+                    else if (link.parentElement.classList.contains('px-2')) {
+                        link.classList.add('bg-indigo-50', 'text-indigo-700');
+                    }
+                }
+            });
+        });
+        
+        // 检查用户是否已登录
+        function checkAuth() {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                // 检查token是否有效
+                fetch('/api/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('未授权');
+                })
+                .then(userData => {
+                    // 用户已登录，更新UI - 桌面版
+                    const desktopAuthContainer = document.getElementById('desktop-auth-container');
+                    if (desktopAuthContainer) {
+                        desktopAuthContainer.innerHTML = `
+                            <div class="relative inline-block text-left">
+                                <button type="button" id="user-menu-button" class="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none" aria-expanded="false" aria-haspopup="true">
+                                    <span class="mr-2 text-sm font-medium">${userData.email}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div id="user-dropdown" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                                    <div class="py-1" role="none">
+                                        <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">控制面板</a>
+                                        <a href="/submissions" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">我的提交</a>
+                                        <button id="logout-button" class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">退出登录</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // 用户菜单切换
+                        document.getElementById('user-menu-button').addEventListener('click', function() {
+                            document.getElementById('user-dropdown').classList.toggle('hidden');
+                        });
+                        
+                        // 点击外部关闭下拉菜单
+                        document.addEventListener('click', function(e) {
+                            const dropdown = document.getElementById('user-dropdown');
+                            const button = document.getElementById('user-menu-button');
+                            if (dropdown && button && !dropdown.contains(e.target) && !button.contains(e.target)) {
+                                dropdown.classList.add('hidden');
+                            }
+                        });
+                    }
+                    
+                    // 移动端也更新
+                    const mobileAuthContainer = document.getElementById('mobile-auth-container');
+                    if (mobileAuthContainer) {
+                        mobileAuthContainer.innerHTML = `
+                            <div class="px-3 py-2 rounded-md text-base font-medium text-gray-700">
+                                <span>${userData.email}</span>
+                            </div>
+                            <a href="/dashboard" class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">控制面板</a>
+                            <a href="/submissions" class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">我的提交</a>
+                            <button id="mobile-logout" class="w-full text-left text-gray-500 hover:bg-gray-100 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">退出登录</button>
+                        `;
+                    }
+                    
+                    // 为所有登出按钮绑定事件
+                    document.querySelectorAll('#logout-button, #mobile-logout').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            localStorage.removeItem('access_token');
+                            window.location.href = '/';
+                        });
+                    });
+                })
+                .catch(error => {
+                    // Token无效，清除本地存储
+                    localStorage.removeItem('access_token');
+                });
+            }
+        }
+        
+        // 页面加载时检查认证状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html> 

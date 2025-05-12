@@ -1,0 +1,663 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    {% if debug %}
+    <!-- 调试信息 -->
+    <div class="bg-gray-800 text-white p-4 mb-4 rounded text-xs font-mono">
+        <p class="mb-1"><strong>当前提交ID (来自 submission 对象):</strong> {{ submission.id }}</p>
+        <p class="mb-1"><strong>当前提交ID (来自 submission_id 变量):</strong> {{ submission_id }}</p>
+        <p class="mb-1"><strong>任务状态:</strong> {{ submission.status }}</p>
+        <p class="mb-1"><strong>原始日志条数 (submitter_logs):</strong> {{ submitter_logs|length }}</p>
+        <p class="mb-1"><strong>截图数量:</strong> {{ screenshots|length }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="mb-6 flex justify-between items-center">
+        <a href="/submission/{{ submission.id }}" class="text-blue-600 hover:text-blue-800">← 返回提交详情</a>
+        <div class="flex items-center space-x-4">
+            <div id="status-indicator" class="
+                {% if submission.status == 'running' %}bg-blue-500 animate-pulse{% elif submission.status == 'completed' %}bg-green-500{% elif submission.status == 'failed' %}bg-red-500{% else %}bg-gray-400{% endif %} 
+                w-3 h-3 rounded-full mr-2"></div>
+            <span id="status-text" class="text-sm font-medium">
+                {% if submission.status == "completed" %}已完成
+                {% elif submission.status == "running" %}进行中...
+                {% elif submission.status == "pending" %}待处理
+                {% elif submission.status == "failed" %}失败
+                {% else %}{{ submission.status|capitalize }}
+                {% endif %}
+            </span>
+            <button onclick="location.reload()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-full text-xs">手动刷新</button>
+        </div>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h1 class="text-2xl font-bold mb-4">{{ submission.product_name }} - 处理日志</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <h2 class="text-sm font-medium text-gray-500">产品网址</h2>
+                <p class="mt-1"><a href="{{ submission.product_url }}" target="_blank" class="text-blue-600 hover:underline">{{ submission.product_url }}</a></p>
+            </div>
+            
+            <div>
+                <h2 class="text-sm font-medium text-gray-500">状态</h2>
+                <p id="status-display-main" class="mt-1"></p> {# JavaScript会填充这里 #}
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">操作日志</h2>
+             <span id="log-count-display" class="text-xs bg-gray-100 rounded-full px-3 py-1 text-gray-700"><!-- Log count will be updated by JS --></span>
+        </div>
+        
+        <div id="log-container" class="bg-gray-100 p-4 rounded overflow-auto max-h-[500px] font-mono text-sm">
+            {% if submitter_logs %}{% for log_entry in submitter_logs %}
+            <div class="log-entry mb-2 flex items-start p-2.5 rounded-md shadow-sm
+                {% if '失败' in log_entry or '错误' in log_entry or '出错' in log_entry or 'Error' in log_entry or 'error' in log_entry %} border-l-4 border-red-500 bg-red-50 text-red-700
+                {% elif '成功' in log_entry or '已完成' in log_entry or '已保存' in log_entry or 'success' in log_entry or 'Success' in log_entry %} border-l-4 border-green-500 bg-green-50 text-green-700
+                {% elif '警告' in log_entry or '注意' in log_entry or 'Warning' in log_entry or 'warning' in log_entry %} border-l-4 border-yellow-500 bg-yellow-50 text-yellow-700
+                {% elif '导航' in log_entry or '浏览器' in log_entry or 'Browser' in log_entry or 'CONSOLE' in log_entry %} border-l-4 border-purple-500 bg-purple-50 text-purple-700
+                {% elif '表单' in log_entry or '字段' in log_entry or '填写' in log_entry %} border-l-4 border-blue-500 bg-blue-50 text-blue-700
+                {% else %} border-l-4 border-gray-400 bg-gray-50 text-gray-700 {% endif %}">
+                
+                <div class="log-meta mr-3 flex-shrink-0">
+                    <span class="log-icon text-lg w-5 text-center">
+                        {% if '找到' in log_entry or '检测到' in log_entry or '开始' in log_entry or 'CONSOLE' in log_entry %} <i class="fas fa-search"></i>
+                        {% elif '填写' in log_entry %} <i class="fas fa-pencil-alt"></i>
+                        {% elif '提交' in log_entry %} <i class="fas fa-paper-plane"></i>
+                        {% elif '截图' in log_entry %} <i class="fas fa-camera"></i>
+                        {% elif '导航' in log_entry or '跳转' in log_entry or '访问' in log_entry %} <i class="fas fa-globe"></i>
+                        {% elif '浏览器' in log_entry or 'Browser' in log_entry %} <i class="fas fa-desktop"></i>
+                        {% else %} <i class="fas fa-info-circle"></i> {% endif %}
+                    </span>
+                </div>
+                
+                <div class="log-content flex-grow">
+                    <div class="log-header-line mb-1">
+                        <span class="log-badge inline-block px-2 py-0.5 text-xs font-semibold rounded-full mr-2
+                            {% if 'INFO' in log_entry %}bg-blue-200 text-blue-800
+                            {% elif 'CONSOLE' in log_entry %}bg-indigo-200 text-indigo-800
+                            {% elif 'AGENT_OUTPUT' in log_entry %}bg-pink-200 text-pink-800
+                            {% elif '正在' in log_entry %}bg-purple-200 text-purple-800
+                            {% elif '尝试' in log_entry %}bg-yellow-200 text-yellow-800
+                            {% elif '失败' in log_entry or '错误' in log_entry %}bg-red-200 text-red-800
+                            {% elif '成功' in log_entry %}bg-green-200 text-green-800
+                            {% else %}bg-gray-200 text-gray-800{% endif %}">
+                            {% if 'CONSOLE' in log_entry %}控制台
+                            {% elif 'AGENT_OUTPUT' in log_entry %}Agent输出
+                            {% elif 'INFO' in log_entry %}信息
+                            {% elif 'http' in log_entry %}网络
+                            {% elif '浏览器' in log_entry %}浏览器
+                            {% elif '创建' in log_entry %}初始化
+                            {% elif '导航' in log_entry %}导航
+                            {% elif '检查' in log_entry %}检查
+                            {% elif '成功' in log_entry %}成功
+                            {% elif '失败' in log_entry or '错误' in log_entry %}错误
+                            {% else %}日志{% endif %}
+                        </span>
+                    </div>
+                    <div class="log-message-text whitespace-pre-wrap text-sm">
+                        {{ log_entry }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}{% else %}
+            <p class="text-gray-500">暂无操作日志</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if screenshots %}
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">处理截图</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for screenshot_url in screenshots %}
+            {% set filename = screenshot_url.split('/')[-1] %}
+            {% if submission_id in filename or submission.id in filename or ('browser/' in screenshot_url and not submission_id in filename and not submission.id in filename) %}{# Looser for general browser errors if needed, but prioritize submission specific #}
+            <div class="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-sm font-medium text-gray-700 truncate" title="{{ filename }}">
+                        {% if 'initial_page' in filename %} <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs mr-1">初始</span>
+                        {% elif 'filled_form' in filename %} <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs mr-1">表单</span>
+                        {% elif 'submission_result' in filename %} <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs mr-1">结果</span>
+                        {% elif 'error' in filename %} <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs mr-1">错误</span>
+                        {% elif 'navigation' in filename %} <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs mr-1">导航</span>
+                        {% else %} <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs mr-1">其他</span> {% endif %}
+                        {{ filename|truncate(40) }}
+                    </p>
+                    <a href="{{ screenshot_url }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm"><i class="fas fa-external-link-alt"></i> 原图</a>
+                </div>
+                <div class="border rounded overflow-hidden relative aspect-video">
+                    <img src="{{ screenshot_url }}" alt="处理截图: {{ filename }}" class="w-full h-full object-contain hover:opacity-90 transition-opacity duration-200"
+                        onerror="this.onerror=null; this.src='/static/img/image_not_found.png'; this.alt='图片未找到'; this.parentNode.classList.add('error-image-container');">
+                    <div class="absolute inset-0 bg-red-100 bg-opacity-50 flex items-center justify-center hidden error-message">
+                        <p class="text-red-600 font-medium text-center p-2 text-xs">图片加载失败</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">处理截图</h2>
+        <p class="text-gray-500">暂无处理截图</p>
+    </div>
+    {% endif %}
+    
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">目标网站提交状态</h2>
+        
+        <div class="space-y-6">
+            {% for result in submission.results %}
+            <div class="border-b border-gray-200 pb-4 {% if loop.last %}border-b-0{% endif %}">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-semibold">{{ result.directory_url }}</h3>
+                    
+                    <div>
+                        {% if result.is_success == true %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            提交成功
+                        </span>
+                        {% elif result.is_success == false %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            提交失败
+                        </span>
+                        {% else %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                            尚未提交
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if result.submitted_at %}
+                <div class="mt-2 text-sm text-gray-500">
+                    提交时间: {{ result.submitted_at.split("T")[0] if result.submitted_at else "-" }}
+                </div>
+                {% endif %}
+                
+                {% if result.short_reason_if_failed %}
+                <div class="mt-2 text-sm text-red-600">
+                    失败原因: {{ result.short_reason_if_failed }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- 数据属性存储服务器变量 -->
+    <div id="server-data" 
+         data-status="{{ submission.status }}" 
+         data-submission-id="{{ submission_id }}"
+         style="display: none;"></div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const serverData = document.getElementById('server-data');
+        const submissionId = serverData.getAttribute('data-submission-id');
+        let currentSubmissionStatus = serverData.getAttribute('data-status');
+
+        const logContainer = document.getElementById('log-container');
+        const logCountDisplay = document.getElementById('log-count-display');
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusText = document.getElementById('status-text');
+        const statusDisplayMain = document.getElementById('status-display-main');
+
+        // 新增：请求控制台日志
+        function fetchConsoleLogs() {
+            fetch(`/submission/${submissionId}/logs`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.logs && data.logs.length > 0) {
+                    console.log(`获取到 ${data.logs.length} 条日志`);
+                    
+                    // 清除"暂无操作日志"消息
+                    if (logContainer.querySelector('.text-gray-500')) {
+                        logContainer.innerHTML = '';
+                    }
+                    
+                    // 添加控制台日志
+                    data.logs.forEach(log => {
+                        // 跳过已经显示的日志
+                        if (logContainer.textContent.includes(log)) {
+                            return;
+                        }
+
+                        const logEntryDiv = document.createElement('div');
+                        // 基本样式: log-entry, mb-2, flex, items-start, p-2.5, rounded-md, shadow-sm, border-l-4
+                        logEntryDiv.className = 'log-entry mb-2 flex items-start p-2.5 rounded-md shadow-sm border-l-4';
+
+                        let entrySpecificClasses = 'border-purple-500 bg-purple-50 text-purple-700'; // 控制台日志的默认主题
+                        let iconClass = 'fas fa-terminal'; // 控制台日志的默认图标
+                        let badgeText = '控制台';
+                        let badgeClasses = 'bg-indigo-200 text-indigo-800'; // 控制台徽章的默认样式
+
+                        const lowerLog = log.toLowerCase();
+                        
+                        // 增强日志类型识别逻辑
+                        if (lowerLog.includes('error') || lowerLog.includes('失败') || lowerLog.includes('错误') || lowerLog.includes('出错')) {
+                            entrySpecificClasses = 'border-red-500 bg-red-50 text-red-700';
+                            iconClass = 'fas fa-exclamation-circle';
+                            badgeText = '错误';
+                            badgeClasses = 'bg-red-200 text-red-800';
+                        } else if (lowerLog.includes('warn') || lowerLog.includes('警告') || lowerLog.includes('注意')) {
+                            entrySpecificClasses = 'border-yellow-500 bg-yellow-50 text-yellow-700';
+                            iconClass = 'fas fa-exclamation-triangle';
+                            badgeText = '警告';
+                            badgeClasses = 'bg-yellow-200 text-yellow-800';
+                        } else if (lowerLog.includes('success') || lowerLog.includes('成功') || lowerLog.includes('已完成')) {
+                            entrySpecificClasses = 'border-green-500 bg-green-50 text-green-700';
+                            iconClass = 'fas fa-check-circle';
+                            badgeText = '成功';
+                            badgeClasses = 'bg-green-200 text-green-800';
+                        } else if (lowerLog.includes('info:') || lowerLog.includes('[info]') || lowerLog.includes('[信息]') || log.includes('[INFO]')) {
+                            // 增加对 [INFO] 大写格式的支持
+                            entrySpecificClasses = 'border-blue-500 bg-blue-50 text-blue-700';
+                            iconClass = 'fas fa-info-circle';
+                            badgeText = '信息';
+                            badgeClasses = 'bg-blue-200 text-blue-800';
+                        } else if (lowerLog.includes('timeout')) {
+                            entrySpecificClasses = 'border-orange-500 bg-orange-50 text-orange-700';
+                            iconClass = 'fas fa-clock';
+                            badgeText = '超时';
+                            badgeClasses = 'bg-orange-200 text-orange-800';
+                        } else if (lowerLog.includes('domexception') || lowerLog.includes('failed to execute')) {
+                            entrySpecificClasses = 'border-red-500 bg-red-50 text-red-700';
+                            iconClass = 'fas fa-code';
+                            badgeText = 'DOM错误';
+                            badgeClasses = 'bg-red-200 text-red-800';
+                        } else if (log.includes('浏览器') || lowerLog.includes('browser')) {
+                            // 专门处理浏览器相关日志
+                            entrySpecificClasses = 'border-purple-500 bg-purple-50 text-purple-700';
+                            iconClass = 'fas fa-desktop';
+                            badgeText = '浏览器';
+                            badgeClasses = 'bg-purple-200 text-purple-800';
+                        } else if (log.startsWith('INFO:') || log.includes('127.0.0.1')) {
+                            // 专门处理服务器访问日志
+                            entrySpecificClasses = 'border-gray-500 bg-gray-50 text-gray-700';
+                            iconClass = 'fas fa-server';
+                            badgeText = '服务器';
+                            badgeClasses = 'bg-gray-200 text-gray-800';
+                        }
+
+                        // 根据关键字确定更具体的图标 (覆盖上面的默认或错误/警告图标)
+                        if (log.includes('找到') || log.includes('检测到') || log.includes('开始')) iconClass = 'fas fa-search';
+                        else if (log.includes('填写')) iconClass = 'fas fa-pencil-alt';
+                        else if (log.includes('提交')) iconClass = 'fas fa-paper-plane';
+                        else if (log.includes('截图')) iconClass = 'fas fa-camera';
+                        else if (log.includes('导航') || log.includes('跳转') || log.includes('访问')) iconClass = 'fas fa-globe';
+                        
+                        logEntryDiv.classList.add(...entrySpecificClasses.split(' '));
+
+                        const logMeta = document.createElement('div');
+                        logMeta.className = 'log-meta mr-3 flex-shrink-0';
+                        logMeta.innerHTML = `<span class="log-icon text-lg w-5 text-center"><i class="${iconClass}"></i></span>`;
+
+                        const logContentDiv = document.createElement('div');
+                        logContentDiv.className = 'log-content flex-grow';
+
+                        const logHeaderLine = document.createElement('div');
+                        logHeaderLine.className = 'log-header-line mb-1';
+                        logHeaderLine.innerHTML = `<span class="log-badge inline-block px-2 py-0.5 text-xs font-semibold rounded-full mr-2 ${badgeClasses}">${badgeText}</span>`;
+                        
+                        const logMessageText = document.createElement('div');
+                        logMessageText.className = 'log-message-text whitespace-pre-wrap text-sm';
+                        logMessageText.textContent = log; // 使用 textContent 安全地设置日志内容
+
+                        logContentDiv.appendChild(logHeaderLine);
+                        logContentDiv.appendChild(logMessageText);
+
+                        logEntryDiv.appendChild(logMeta);
+                        logEntryDiv.appendChild(logContentDiv);
+                        
+                        logContainer.appendChild(logEntryDiv);
+                    });
+                    
+                    // 更新日志计数
+                    updateLogCount();
+                    
+                    // 滚动到底部
+                    logContainer.scrollTop = logContainer.scrollHeight;
+                }
+            })
+            .catch(error => {
+                console.error('获取控制台日志失败:', error);
+                // 尝试使用另一种格式的API路径
+                if (error.message && error.message.includes('404')) {
+                    console.log('尝试使用备选API路径获取日志...');
+                    fetch(`/api/submission/${submissionId}/logs`, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.logs && data.logs.length > 0) {
+                            console.log(`通过备选路径获取到 ${data.logs.length} 条日志`);
+                            // 清除"暂无操作日志"消息
+                            if (logContainer.querySelector('.text-gray-500')) {
+                                logContainer.innerHTML = '';
+                            }
+                            
+                            // 添加控制台日志
+                            data.logs.forEach(log => {
+                                // 跳过已经显示的日志
+                                if (logContainer.textContent.includes(log)) {
+                                    return;
+                                }
+
+                                const logEntryDiv = document.createElement('div');
+                                // 基本样式: log-entry, mb-2, flex, items-start, p-2.5, rounded-md, shadow-sm, border-l-4
+                                logEntryDiv.className = 'log-entry mb-2 flex items-start p-2.5 rounded-md shadow-sm border-l-4';
+
+                                let entrySpecificClasses = 'border-purple-500 bg-purple-50 text-purple-700'; // 控制台日志的默认主题
+                                let iconClass = 'fas fa-terminal'; // 控制台日志的默认图标
+                                let badgeText = '控制台';
+                                let badgeClasses = 'bg-indigo-200 text-indigo-800'; // 控制台徽章的默认样式
+
+                                const lowerLog = log.toLowerCase();
+                                
+                                // 增强日志类型识别逻辑
+                                if (lowerLog.includes('error') || lowerLog.includes('失败') || lowerLog.includes('错误') || lowerLog.includes('出错')) {
+                                    entrySpecificClasses = 'border-red-500 bg-red-50 text-red-700';
+                                    iconClass = 'fas fa-exclamation-circle';
+                                    badgeText = '错误';
+                                    badgeClasses = 'bg-red-200 text-red-800';
+                                } else if (lowerLog.includes('warn') || lowerLog.includes('警告') || lowerLog.includes('注意')) {
+                                    entrySpecificClasses = 'border-yellow-500 bg-yellow-50 text-yellow-700';
+                                    iconClass = 'fas fa-exclamation-triangle';
+                                    badgeText = '警告';
+                                    badgeClasses = 'bg-yellow-200 text-yellow-800';
+                                } else if (lowerLog.includes('success') || lowerLog.includes('成功') || lowerLog.includes('已完成')) {
+                                    entrySpecificClasses = 'border-green-500 bg-green-50 text-green-700';
+                                    iconClass = 'fas fa-check-circle';
+                                    badgeText = '成功';
+                                    badgeClasses = 'bg-green-200 text-green-800';
+                                } else if (lowerLog.includes('info:') || lowerLog.includes('[info]') || lowerLog.includes('[信息]') || log.includes('[INFO]')) {
+                                    // 增加对 [INFO] 大写格式的支持
+                                    entrySpecificClasses = 'border-blue-500 bg-blue-50 text-blue-700';
+                                    iconClass = 'fas fa-info-circle';
+                                    badgeText = '信息';
+                                    badgeClasses = 'bg-blue-200 text-blue-800';
+                                } else if (lowerLog.includes('timeout')) {
+                                    entrySpecificClasses = 'border-orange-500 bg-orange-50 text-orange-700';
+                                    iconClass = 'fas fa-clock';
+                                    badgeText = '超时';
+                                    badgeClasses = 'bg-orange-200 text-orange-800';
+                                } else if (lowerLog.includes('domexception') || lowerLog.includes('failed to execute')) {
+                                    entrySpecificClasses = 'border-red-500 bg-red-50 text-red-700';
+                                    iconClass = 'fas fa-code';
+                                    badgeText = 'DOM错误';
+                                    badgeClasses = 'bg-red-200 text-red-800';
+                                } else if (log.includes('浏览器') || lowerLog.includes('browser')) {
+                                    // 专门处理浏览器相关日志
+                                    entrySpecificClasses = 'border-purple-500 bg-purple-50 text-purple-700';
+                                    iconClass = 'fas fa-desktop';
+                                    badgeText = '浏览器';
+                                    badgeClasses = 'bg-purple-200 text-purple-800';
+                                } else if (log.startsWith('INFO:') || log.includes('127.0.0.1')) {
+                                    // 专门处理服务器访问日志
+                                    entrySpecificClasses = 'border-gray-500 bg-gray-50 text-gray-700';
+                                    iconClass = 'fas fa-server';
+                                    badgeText = '服务器';
+                                    badgeClasses = 'bg-gray-200 text-gray-800';
+                                }
+
+                                // 根据关键字确定更具体的图标 (覆盖上面的默认或错误/警告图标)
+                                if (log.includes('找到') || log.includes('检测到') || log.includes('开始')) iconClass = 'fas fa-search';
+                                else if (log.includes('填写')) iconClass = 'fas fa-pencil-alt';
+                                else if (log.includes('提交')) iconClass = 'fas fa-paper-plane';
+                                else if (log.includes('截图')) iconClass = 'fas fa-camera';
+                                else if (log.includes('导航') || log.includes('跳转') || log.includes('访问')) iconClass = 'fas fa-globe';
+                                
+                                logEntryDiv.classList.add(...entrySpecificClasses.split(' '));
+
+                                const logMeta = document.createElement('div');
+                                logMeta.className = 'log-meta mr-3 flex-shrink-0';
+                                logMeta.innerHTML = `<span class="log-icon text-lg w-5 text-center"><i class="${iconClass}"></i></span>`;
+
+                                const logContentDiv = document.createElement('div');
+                                logContentDiv.className = 'log-content flex-grow';
+
+                                const logHeaderLine = document.createElement('div');
+                                logHeaderLine.className = 'log-header-line mb-1';
+                                logHeaderLine.innerHTML = `<span class="log-badge inline-block px-2 py-0.5 text-xs font-semibold rounded-full mr-2 ${badgeClasses}">${badgeText}</span>`;
+                                
+                                const logMessageText = document.createElement('div');
+                                logMessageText.className = 'log-message-text whitespace-pre-wrap text-sm';
+                                logMessageText.textContent = log; // 使用 textContent 安全地设置日志内容
+
+                                logContentDiv.appendChild(logHeaderLine);
+                                logContentDiv.appendChild(logMessageText);
+
+                                logEntryDiv.appendChild(logMeta);
+                                logEntryDiv.appendChild(logContentDiv);
+                                
+                                logContainer.appendChild(logEntryDiv);
+                            });
+                            
+                            // 更新日志计数
+                            updateLogCount();
+                            
+                            // 滚动到底部
+                            logContainer.scrollTop = logContainer.scrollHeight;
+                        }
+                    })
+                    .catch(err => console.error('备选API路径也获取失败:', err));
+                }
+            });
+        }
+
+        // 新增定时获取日志功能，每3秒更新一次
+        let logRefreshInterval = null;
+        if (currentSubmissionStatus === "running") {
+            logRefreshInterval = setInterval(fetchConsoleLogs, 2000); // 改为每2秒刷新一次
+            console.log("已启动自动日志刷新 (每2秒)");
+        }
+
+        // 在页面加载完成后立即获取一次日志
+        fetchConsoleLogs();
+
+        function updateLogCount() {
+            if (logContainer && logCountDisplay) {
+                const logEntries = logContainer.querySelectorAll('.mb-2.p-2');
+                logCountDisplay.textContent = `${logEntries.length} 条日志`;
+            }
+        }
+
+        function updateStatusDisplay(status) {
+            let statusHTML = '';
+            let indicatorClass = 'bg-gray-400';
+            let textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+            if (status === "completed") {
+                statusHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已完成</span>';
+                indicatorClass = 'bg-green-500';
+                textContent = '已完成';
+            } else if (status === "running") {
+                statusHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">进行中</span>';
+                indicatorClass = 'bg-blue-500 animate-pulse';
+                textContent = '进行中...';
+            } else if (status === "failed") {
+                statusHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">失败</span>';
+                indicatorClass = 'bg-red-500';
+                textContent = '失败';
+            } else if (status === "pending") {
+                statusHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">待处理</span>';
+                 indicatorClass = 'bg-yellow-500';
+                 textContent = '待处理';
+            }
+            if (statusDisplayMain) statusDisplayMain.innerHTML = statusHTML;
+            if (statusIndicator) statusIndicator.className = `w-3 h-3 rounded-full mr-2 ${indicatorClass}`;
+            if (statusText) statusText.textContent = textContent;
+        }
+
+        if (logContainer) {
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        updateLogCount();
+        updateStatusDisplay(currentSubmissionStatus);
+
+        let refreshTimer = null;
+        const REFRESH_INTERVAL = 8000; // 8秒刷新间隔
+        function checkForChanges() {
+            if (currentSubmissionStatus !== "running") {
+                console.log('任务状态不再是 running, 停止自动刷新。');
+                if(refreshTimer) clearTimeout(refreshTimer);
+                if(logRefreshInterval) clearInterval(logRefreshInterval);
+                return;
+            }
+
+            fetch(window.location.href, { 
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Cache-Control': 'no-cache' }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const newServerData = doc.getElementById('server-data');
+                if (!newServerData) {
+                    console.error('无法在新HTML中找到 server-data 元素');
+                    if(refreshTimer) clearTimeout(refreshTimer); // 停止以防万一
+                    return;
+                }
+                const newStatus = newServerData.getAttribute('data-status');
+                
+                const newLogContainer = doc.getElementById('log-container');
+                const oldLogCount = logContainer ? logContainer.querySelectorAll('.mb-2.p-2').length : 0;
+                const newLogCount = newLogContainer ? newLogContainer.querySelectorAll('.mb-2.p-2').length : 0;
+                
+                // 检查是否有新的截图
+                const oldScreenshotCount = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.gap-6 > div').length;
+                const newScreenshotContainer = doc.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.gap-6');
+                const newScreenshotCount = newScreenshotContainer ? newScreenshotContainer.querySelectorAll('> div').length : 0;
+                
+                // 检查截图数量是否增加
+                if (newScreenshotCount > oldScreenshotCount) {
+                    console.log('检测到新的截图上传，刷新整页');
+                    window.location.reload();
+                    return;
+                }
+                
+                // 检查目标网站提交状态是否有变化
+                const oldResultsContainer = document.querySelector('.space-y-6');
+                const oldResultsSuccess = oldResultsContainer ? oldResultsContainer.querySelectorAll('.bg-green-100.text-green-800').length : 0;
+                const oldResultsFailed = oldResultsContainer ? oldResultsContainer.querySelectorAll('.bg-red-100.text-red-800').length : 0;
+                
+                const newResultsContainer = doc.querySelector('.space-y-6');
+                const newResultsSuccess = newResultsContainer ? newResultsContainer.querySelectorAll('.bg-green-100.text-green-800').length : 0;
+                const newResultsFailed = newResultsContainer ? newResultsContainer.querySelectorAll('.bg-red-100.text-red-800').length : 0;
+                
+                // 如果提交结果状态有变化，刷新整个页面
+                if (newResultsSuccess !== oldResultsSuccess || newResultsFailed !== oldResultsFailed) {
+                    console.log('检测到提交结果状态变化，刷新整页');
+                    window.location.reload();
+                    return;
+                }
+                
+                // 检查状态或日志数量是否有变化
+                if (newStatus !== currentSubmissionStatus || newLogCount > oldLogCount) {
+                    console.log('检测到状态或日志更新，正在刷新页面。');
+                    
+                    // 当状态发生变化时，刷新整个页面
+                    if (newStatus !== currentSubmissionStatus) {
+                        console.log('任务状态已从 ' + currentSubmissionStatus + ' 变为 ' + newStatus + '，刷新整页');
+                        window.location.reload();
+                        return;
+                    }
+                    
+                    // 获取最新日志然后更新状态
+                    fetchConsoleLogs();
+                    if (newStatus !== currentSubmissionStatus) {
+                        currentSubmissionStatus = newStatus;
+                        updateStatusDisplay(newStatus);
+                        
+                        if (newStatus !== "running" && logRefreshInterval) {
+                            clearInterval(logRefreshInterval);
+                            logRefreshInterval = null;
+                        }
+                        
+                        if (newStatus !== "running") {
+                            if(refreshTimer) clearTimeout(refreshTimer);
+                            return;
+                        }
+                    }
+                    
+                    if(refreshTimer) clearTimeout(refreshTimer);
+                    refreshTimer = setTimeout(checkForChanges, REFRESH_INTERVAL);
+                } else {
+                    // 如果状态仍是 running 且无变化，则继续轮询
+                    if (newStatus === "running") {
+                        if(refreshTimer) clearTimeout(refreshTimer); // 清除旧的定时器
+                        refreshTimer = setTimeout(checkForChanges, REFRESH_INTERVAL);
+                    } else {
+                        console.log('任务状态变为 ' + newStatus + ', 停止刷新。');
+                        currentSubmissionStatus = newStatus; // 更新当前状态以停止循环
+                        updateStatusDisplay(currentSubmissionStatus); // 更新页面上的状态显示
+                        if(refreshTimer) clearTimeout(refreshTimer);
+                        if(logRefreshInterval) clearInterval(logRefreshInterval);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('检查更新失败:', error);
+                // 发生错误时，也尝试安排下一次检查，除非状态已改变
+                if (currentSubmissionStatus === "running") {
+                    if(refreshTimer) clearTimeout(refreshTimer); // 清除旧的定时器
+                    refreshTimer = setTimeout(checkForChanges, REFRESH_INTERVAL * 2); // 出错时延长等待时间
+                }
+            });
+        }
+
+        // 初始启动自动刷新 (如果任务是 running)
+        if (currentSubmissionStatus === "running") {
+            console.log('任务正在进行中，启动自动刷新。');
+            refreshTimer = setTimeout(checkForChanges, REFRESH_INTERVAL);
+        }
+        
+        // 页面卸载时清除定时器
+        window.addEventListener('beforeunload', function() {
+            if(refreshTimer) clearTimeout(refreshTimer);
+            if(logRefreshInterval) clearInterval(logRefreshInterval);
+        });
+
+        // 图片错误处理
+        document.querySelectorAll('.error-image-container img').forEach(function(img) {
+            img.addEventListener('error', function() {
+                const container = this.parentNode;
+                const errorMessage = container.querySelector('.error-message');
+                if (errorMessage) {
+                    errorMessage.classList.remove('hidden');
+                    this.style.opacity = '0.3'; // 使图片变暗淡
+                }
+            });
+        });
+    });
+    </script>
+    
+    <style>
+        /* error-image-container 已被移除，因为onerror直接操作img的父节点 */
+    </style>
+</div>
+{% endblock %} 

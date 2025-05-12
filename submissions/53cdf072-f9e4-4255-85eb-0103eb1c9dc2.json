@@ -1,0 +1,37 @@
+{
+  "id": "53cdf072-f9e4-4255-85eb-0103eb1c9dc2",
+  "product_name": "百度",
+  "product_url": "https://www.baidu.com",
+  "short_description": "百度",
+  "product_description": "百度",
+  "product_category": "image",
+  "pricing_model": "free",
+  "product_tags": [
+    "百度"
+  ],
+  "target_directories": [
+    "https://aitools.neilpatel.com/submit/",
+    "https://aitoolslist.io/submit-ai-tool/"
+  ],
+  "email": "whuaibao1@gmail.com",
+  "logo_path": "uploads/logos/1871b49f-530e-4054-81e3-cd11dd0a64de.jpg",
+  "screenshot_path": "uploads/screenshots/abab213d-fd8f-48e4-9f91-cbf2b1484d9e.png",
+  "created_at": "2025-05-10T12:47:27.111876",
+  "status": "pending",
+  "results": [
+    {
+      "directory_url": "https://aitools.neilpatel.com/submit/",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    },
+    {
+      "directory_url": "https://aitoolslist.io/submit-ai-tool/",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    }
+  ]
+}

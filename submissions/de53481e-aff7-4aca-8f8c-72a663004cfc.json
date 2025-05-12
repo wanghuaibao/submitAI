@@ -1,0 +1,77 @@
+{
+  "id": "de53481e-aff7-4aca-8f8c-72a663004cfc",
+  "product_name": "百度",
+  "product_url": "https://www.baidu.com",
+  "short_description": "百度",
+  "product_description": "222",
+  "product_category": "text",
+  "pricing_model": "free",
+  "product_tags": [
+    "百度"
+  ],
+  "target_directories": [
+    "https://aitools.neilpatel.com/submit/",
+    "https://aitoolslist.io/submit-ai-tool/",
+    "https://free-ai-tools-directory.com/submit-request/",
+    "https://gpt3demo.com/partner/request",
+    "https://www.insidr.ai/submit-tools/",
+    "https://www.humanornot.co/submit-tool",
+    "https://www.rundown.ai/submit"
+  ],
+  "email": "kutooy@mailto.plus",
+  "logo_path": "uploads/logos/39433401-7456-4407-add1-7d0117fcbd9d.jpg",
+  "screenshot_path": "uploads/screenshots/7fd0650e-e126-4ec3-bf38-f462684ff08b.jpg",
+  "created_at": "2025-05-11T21:04:27.917751",
+  "status": "running",
+  "results": [
+    {
+      "directory_url": "https://aitools.neilpatel.com/submit/",
+      "has_submission_form": false,
+      "is_success": false,
+      "short_reason_if_failed": "导航到 https://aitools.neilpatel.com/submit/ 失败，已尝试 2 次",
+      "submitted_at": "2025-05-11T21:04:49.097431"
+    },
+    {
+      "directory_url": "https://aitoolslist.io/submit-ai-tool/",
+      "has_submission_form": true,
+      "is_success": false,
+      "short_reason_if_failed": "表单提交失败 (通用逻辑)",
+      "submitted_at": "2025-05-11T21:10:17.412708"
+    },
+    {
+      "directory_url": "https://free-ai-tools-directory.com/submit-request/",
+      "has_submission_form": true,
+      "is_success": false,
+      "short_reason_if_failed": "检测到错误: error",
+      "submitted_at": "2025-05-11T21:13:33.054696"
+    },
+    {
+      "directory_url": "https://gpt3demo.com/partner/request",
+      "has_submission_form": false,
+      "is_success": false,
+      "short_reason_if_failed": "导航到 https://gpt3demo.com/partner/request 失败，已尝试 2 次",
+      "submitted_at": "2025-05-11T21:14:11.792008"
+    },
+    {
+      "directory_url": "https://www.insidr.ai/submit-tools/",
+      "has_submission_form": false,
+      "is_success": false,
+      "short_reason_if_failed": "导航到 https://www.insidr.ai/submit-tools/ 失败，已尝试 2 次",
+      "submitted_at": "2025-05-11T21:14:33.912422"
+    },
+    {
+      "directory_url": "https://www.humanornot.co/submit-tool",
+      "has_submission_form": false,
+      "is_success": false,
+      "short_reason_if_failed": "导航到 https://www.humanornot.co/submit-tool 失败，已尝试 2 次",
+      "submitted_at": "2025-05-11T21:14:52.957003"
+    },
+    {
+      "directory_url": "https://www.rundown.ai/submit",
+      "has_submission_form": true,
+      "is_success": null,
+      "short_reason_if_failed": "",
+      "submitted_at": null
+    }
+  ]
+}

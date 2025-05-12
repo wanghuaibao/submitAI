@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-8 text-center">使用指南</h1>
+    
+    <!-- 快速入门部分 -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+        <h2 class="text-2xl font-bold mb-4">快速入门</h2>
+        <p class="mb-6">通过以下四个简单步骤开始使用我们的自动化产品提交工具：</p>
+        
+        <div class="space-y-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg">填写产品信息</h3>
+                    <p class="text-gray-600">在"创建新提交"页面填写您的AI工具详细信息，包括名称、URL、描述等。确保提供准确信息并上传清晰的产品Logo。</p>
+                </div>
+            </div>
+            
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg">选择目标目录</h3>
+                    <p class="text-gray-600">勾选您希望将产品提交到的目录网站。您可以同时选择多个目录，系统将自动处理所有提交。</p>
+                </div>
+            </div>
+            
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg">开始自动提交</h3>
+                    <p class="text-gray-600">提交表单后，您将被重定向到提交列表页面。点击相应提交的"查看"按钮，然后点击"开始提交"启动自动提交流程。</p>
+                </div>
+            </div>
+            
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">4</div>
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg">查看提交结果</h3>
+                    <p class="text-gray-600">系统将在后台处理提交，并实时更新状态。您可以随时刷新页面查看最新进度，包括成功状态和错误信息（如有）。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 测试指南部分 -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+        <h2 class="text-2xl font-bold mb-4">测试指南</h2>
+        <p class="mb-6">如果您想测试系统功能，请按照以下步骤操作：</p>
+        
+        <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-md">
+                <h3 class="font-bold text-lg mb-2">1. 启动应用</h3>
+                <p class="mb-2">使用以下命令启动应用：</p>
+                <pre class="bg-gray-800 text-white p-3 rounded-md overflow-x-auto"><code># MacOS/Linux
+./start.sh
+
+# Windows
+start.bat</code></pre>
+                <p class="mt-2 text-gray-600">确保应用成功启动，并显示"应用已在 http://localhost:8000 启动"消息。</p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-md">
+                <h3 class="font-bold text-lg mb-2">2. 访问Web界面</h3>
+                <p class="mb-2">在浏览器中打开以下地址：</p>
+                <div class="bg-gray-800 text-white p-3 rounded-md">
+                    <a href="http://localhost:8000" class="text-blue-400 hover:underline" target="_blank">http://localhost:8000</a>
+                </div>
+                <p class="mt-2 text-gray-600">确保能看到首页内容，并且各个链接正常工作。</p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-md">
+                <h3 class="font-bold text-lg mb-2">3. 创建测试提交</h3>
+                <p class="mb-2">点击"创建新提交"按钮，使用以下测试数据：</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+                    <li>产品名称：Test AI Tool</li>
+                    <li>产品网址：https://example.com</li>
+                    <li>简短描述：这是一个用于测试的AI工具</li>
+                    <li>详细描述：这是一个测试描述，用于验证系统功能是否正常工作。包含详细信息和特点说明。</li>
+                    <li>产品分类：选择任意一个</li>
+                    <li>价格模型：选择任意一个</li>
+                    <li>标签：test,ai,demo</li>
+                    <li>上传测试Logo：使用任何图片文件</li>
+                </ul>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-md">
+                <h3 class="font-bold text-lg mb-2">4. 启动测试提交</h3>
+                <p class="mb-2">在提交列表页面，找到您刚创建的测试提交，点击"查看"，然后点击"开始提交"按钮。</p>
+                <p class="text-gray-600">系统将在后台启动浏览器（无头模式），并开始自动提交流程。</p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-md">
+                <h3 class="font-bold text-lg mb-2">5. 确认测试成功</h3>
+                <p class="mb-2">测试成功的标准：</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+                    <li>状态变为"已完成"</li>
+                    <li>各目标网站显示"提交成功"状态</li>
+                    <li>logs目录中包含表单填写和提交过程的截图</li>
+                    <li>logs/submissions目录包含提交记录和结果</li>
+                </ul>
+                <p class="mt-2 text-gray-600">注：测试提交时不会实际提交到目录网站，但会模拟完整流程。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 常见问题解答 -->
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-bold mb-6">常见问题解答</h2>
+        
+        <div class="space-y-6">
+            <div>
+                <h3 class="font-bold text-lg">应用无法启动怎么办？</h3>
+                <p class="text-gray-600">
+                    确认是否已安装所有依赖，可以尝试手动运行以下命令：<br>
+                    <code class="bg-gray-100 px-2 py-1 rounded">pip install -r requirements.txt</code><br>
+                    <code class="bg-gray-100 px-2 py-1 rounded">playwright install chromium</code>
+                </p>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-lg">提交过程卡在"进行中"状态？</h3>
+                <p class="text-gray-600">
+                    检查logs/submitter_日期.log文件查看详细错误信息。可能的原因包括网络问题、目录网站暂时不可用或表单结构变化。
+                </p>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-lg">如何查看提交的详细过程？</h3>
+                <p class="text-gray-600">
+                    在logs/submissions目录下查找以您提交ID开头的文件，包括表单截图、结果截图和表单字段映射信息。
+                </p>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-lg">如何在公共服务器上部署？</h3>
+                <p class="text-gray-600">
+                    可以使用Docker或直接在支持Python的服务器上部署。确保服务器上已安装Python 3.8+、必要依赖和Playwright。<br>
+                    完整部署指南请参考<a href="/static/DEPLOY.md" class="text-indigo-600 hover:underline">部署文档</a>。
+                </p>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-lg">提交失败的常见原因？</h3>
+                <p class="text-gray-600">
+                    <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li>产品描述过短或包含不适当内容</li>
+                        <li>网络链接不可访问</li>
+                        <li>产品Logo分辨率过低或尺寸不合适</li>
+                        <li>目录网站表单结构变化</li>
+                        <li>目录网站暂时维护或不可用</li>
+                    </ul>
+                </p>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-lg">提交后多久能在目录网站上看到？</h3>
+                <p class="text-gray-600">
+                    大多数目录网站需要人工审核，通常需要1-7天的处理时间。成功提交不代表一定会被发布，内容仍需符合各网站规范。
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 联系支持 -->
+    <div class="mt-8 text-center">
+        <p class="text-gray-600">如果您有其他问题或需要帮助，请<a href="#" class="text-indigo-600 hover:underline">联系我们的支持团队</a>。</p>
+    </div>
+</div>
+{% endblock %} 

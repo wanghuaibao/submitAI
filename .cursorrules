@@ -1,0 +1,22 @@
+# Cursor Rules 配置文件
+# 配置已移除
+
+# 提交前环境检查
+check_environment() {
+  echo "检查网络连接..."
+  if curl -s --connect-timeout 5 https://www.google.com > /dev/null; then
+    echo "网络连接正常"
+    return 0
+  else
+    echo "警告: 网络连接异常"
+    return 1
+  fi
+}
+
+# 初始化
+init() {
+  check_environment
+}
+
+# 默认执行初始化
+init 
